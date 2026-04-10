@@ -1,0 +1,1 @@
+echo '{"Broken Road Sign Issues": 0, "Damaged Road issues": 1, "Illegal Parking Issues": 2, "Mixed Issues": 3, "Pothole Issues": 4}' > saved_models/classes.json

@@ -1,0 +1,644 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Road Infrastructure Monitoring System</title>
+    <style>
+        * {
+            margin: 0;
+            padding: 0;
+            box-sizing: border-box;
+        }
+
+        body {
+            font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif;
+            background: linear-gradient(135deg, #667eea 0%, #764ba2 100%);
+            min-height: 100vh;
+            padding: 20px;
+        }
+
+        .container {
+            max-width: 1400px;
+            margin: 0 auto;
+            background: white;
+            border-radius: 20px;
+            box-shadow: 0 20px 60px rgba(0,0,0,0.3);
+            overflow: hidden;
+        }
+
+        /* Header */
+        .header {
+            background: linear-gradient(135deg, #2196F3, #1976D2);
+            color: white;
+            padding: 30px;
+            text-align: center;
+        }
+
+        .header h1 {
+            font-size: 28px;
+            margin-bottom: 10px;
+        }
+
+        .header p {
+            font-size: 14px;
+            opacity: 0.9;
+        }
+
+        /* Button Panel */
+        .button-panel {
+            padding: 20px;
+            background: #f5f5f5;
+            display: flex;
+            justify-content: center;
+            gap: 15px;
+            border-bottom: 1px solid #e0e0e0;
+        }
+
+        .btn {
+            padding: 12px 30px;
+            font-size: 16px;
+            font-weight: bold;
+            border: none;
+            border-radius: 10px;
+            cursor: pointer;
+            transition: all 0.3s ease;
+            display: inline-flex;
+            align-items: center;
+            gap: 10px;
+        }
+
+        .btn-primary {
+            background: #2196F3;
+            color: white;
+        }
+
+        .btn-primary:hover {
+            background: #1976D2;
+            transform: translateY(-2px);
+        }
+
+        .btn-success {
+            background: #4CAF50;
+            color: white;
+        }
+
+        .btn-success:hover {
+            background: #45a049;
+            transform: translateY(-2px);
+        }
+
+        .btn-warning {
+            background: #FF9800;
+            color: white;
+        }
+
+        .btn-warning:hover {
+            background: #e68900;
+            transform: translateY(-2px);
+        }
+
+        .btn-secondary {
+            background: #9E9E9E;
+            color: white;
+        }
+
+        .btn-secondary:hover {
+            background: #757575;
+            transform: translateY(-2px);
+        }
+
+        .btn:disabled {
+            opacity: 0.5;
+            cursor: not-allowed;
+            transform: none;
+        }
+
+        /* Main Content */
+        .main-content {
+            display: flex;
+            gap: 20px;
+            padding: 20px;
+            min-height: 600px;
+        }
+
+        /* Left Panel - Image */
+        .image-panel {
+            flex: 1;
+            background: #fafafa;
+            border-radius: 15px;
+            padding: 20px;
+            border: 1px solid #e0e0e0;
+        }
+
+        .image-panel h3 {
+            margin-bottom: 15px;
+            color: #333;
+            display: flex;
+            align-items: center;
+            gap: 10px;
+        }
+
+        .image-container {
+            background: white;
+            border-radius: 10px;
+            padding: 20px;
+            text-align: center;
+            min-height: 400px;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            border: 2px dashed #ccc;
+        }
+
+        .image-container img {
+            max-width: 100%;
+            max-height: 450px;
+            border-radius: 10px;
+        }
+
+        .image-info {
+            margin-top: 15px;
+            padding: 10px;
+            background: #e3f2fd;
+            border-radius: 8px;
+            font-size: 14px;
+            color: #1976D2;
+            text-align: center;
+        }
+
+        /* Right Panel - Results */
+        .results-panel {
+            flex: 1;
+            background: #fafafa;
+            border-radius: 15px;
+            padding: 20px;
+            border: 1px solid #e0e0e0;
+            display: flex;
+            flex-direction: column;
+            gap: 20px;
+        }
+
+        .results-header {
+            background: #2196F3;
+            color: white;
+            padding: 15px;
+            border-radius: 10px;
+            text-align: center;
+            margin: -20px -20px 0 -20px;
+            border-radius: 15px 15px 0 0;
+        }
+
+        .status-badge {
+            padding: 10px;
+            border-radius: 8px;
+            text-align: center;
+            font-weight: bold;
+        }
+
+        .status-success {
+            background: #d4edda;
+            color: #155724;
+            border: 1px solid #c3e6cb;
+        }
+
+        .status-warning {
+            background: #fff3cd;
+            color: #856404;
+            border: 1px solid #ffeeba;
+        }
+
+        .status-error {
+            background: #f8d7da;
+            color: #721c24;
+            border: 1px solid #f5c6cb;
+        }
+
+        .result-card {
+            background: white;
+            border-radius: 10px;
+            padding: 15px;
+            margin-bottom: 15px;
+            border-left: 4px solid #2196F3;
+        }
+
+        .result-title {
+            font-weight: bold;
+            margin-bottom: 10px;
+            color: #333;
+        }
+
+        .result-value {
+            font-size: 18px;
+            margin-bottom: 5px;
+        }
+
+        .priority-high {
+            color: #e74c3c;
+            font-weight: bold;
+        }
+
+        .priority-medium {
+            color: #f39c12;
+            font-weight: bold;
+        }
+
+        .priority-low {
+            color: #27ae60;
+            font-weight: bold;
+        }
+
+        .probability-bar {
+            background: #f0f0f0;
+            border-radius: 5px;
+            overflow: hidden;
+            margin-top: 5px;
+        }
+
+        .probability-fill {
+            background: #2196F3;
+            color: white;
+            padding: 3px 8px;
+            font-size: 12px;
+            text-align: right;
+        }
+
+        .damage-selector {
+            background: #FFF8E1;
+            border-left-color: #FFC107;
+        }
+
+        .damage-selector select {
+            width: 100%;
+            padding: 10px;
+            margin-top: 10px;
+            border: 1px solid #FFC107;
+            border-radius: 8px;
+            font-size: 14px;
+            background: white;
+            cursor: pointer;
+        }
+
+        .damage-selector select:focus {
+            outline: none;
+            border-color: #FF9800;
+            box-shadow: 0 0 5px rgba(255,152,0,0.3);
+        }
+
+        .log-panel {
+            background: #1e1e1e;
+            border-radius: 10px;
+            padding: 15px;
+            margin-top: 20px;
+        }
+
+        .log-panel h4 {
+            color: #d4d4d4;
+            margin-bottom: 10px;
+        }
+
+        .log-content {
+            background: #2d2d2d;
+            border-radius: 5px;
+            padding: 10px;
+            height: 150px;
+            overflow-y: auto;
+            font-family: 'Consolas', monospace;
+            font-size: 12px;
+            color: #d4d4d4;
+        }
+
+        .log-entry {
+            padding: 2px 0;
+            border-bottom: 1px solid #3d3d3d;
+        }
+
+        .loader {
+            display: inline-block;
+            width: 20px;
+            height: 20px;
+            border: 3px solid #f3f3f3;
+            border-top: 3px solid #3498db;
+            border-radius: 50%;
+            animation: spin 1s linear infinite;
+        }
+
+        @keyframes spin {
+            0% { transform: rotate(0deg); }
+            100% { transform: rotate(360deg); }
+        }
+
+        .hidden {
+            display: none;
+        }
+
+        @media (max-width: 768px) {
+            .main-content {
+                flex-direction: column;
+            }
+            .btn {
+                padding: 8px 15px;
+                font-size: 12px;
+            }
+        }
+    </style>
+</head>
+<body>
+    <div class="container">
+        <!-- Header -->
+        <div class="header">
+            <h1>🏗️ ROAD INFRASTRUCTURE MONITORING SYSTEM 🏗️</h1>
+            <p>Problem classification: damaged signs | road defects | parking violations | potholes</p>
+        </div>
+
+        <!-- Button Panel -->
+        <div class="button-panel">
+            <input type="file" id="fileInput" accept="image/*" style="display: none;">
+            <button class="btn btn-primary" onclick="document.getElementById('fileInput').click()">
+                📁 UPLOAD IMAGE
+            </button>
+            <button class="btn btn-success" id="analyzeBtn" onclick="analyzeImage()" disabled>
+                🔍 RUN ANALYSIS
+            </button>
+            <button class="btn btn-warning" onclick="clearAll()">
+                🗑 CLEAR ALL
+            </button>
+        </div>
+
+        <!-- Main Content -->
+        <div class="main-content">
+            <!-- Left Panel -->
+            <div class="image-panel">
+                <h3>📷 UPLOADED IMAGE</h3>
+                <div class="image-container" id="imageContainer">
+                    <div style="text-align: center; color: #999;">
+                        <div style="font-size: 48px; margin-bottom: 10px;">🖼️</div>
+                        <p>No image uploaded</p>
+                        <p style="font-size: 12px;">Click "Upload Image" to start</p>
+                    </div>
+                </div>
+                <div class="image-info hidden" id="imageInfo"></div>
+            </div>
+
+            <!-- Right Panel -->
+            <div class="results-panel">
+                <div class="results-header">
+                    <h3>📊 ANALYSIS RESULTS</h3>
+                </div>
+
+                <div id="statusContainer">
+                    <div class="status-badge status-warning" id="modelStatus">
+                        ⏳ Checking model status...
+                    </div>
+                </div>
+
+                <div id="resultsContainer">
+                    <div style="text-align: center; color: #999; padding: 40px;">
+                        <div style="font-size: 48px; margin-bottom: 10px;">🔍</div>
+                        <p>Upload an image and click "Run Analysis"</p>
+                    </div>
+                </div>
+
+                <!-- Log -->
+                <div class="log-panel">
+                    <h4>📋 SYSTEM LOG</h4>
+                    <div class="log-content" id="logContent">
+                        <div class="log-entry">🔄 Initializing system...</div>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </div>
+
+    <script>
+        let currentImageFile = null;
+        let currentImageData = null;
+        let currentAnalysisResult = null;
+
+        // Add log entry
+        function addLog(message) {
+            const logContent = document.getElementById('logContent');
+            const timestamp = new Date().toLocaleTimeString();
+            const logEntry = document.createElement('div');
+            logEntry.className = 'log-entry';
+            logEntry.textContent = `[${timestamp}] ${message}`;
+            logContent.appendChild(logEntry);
+            logContent.scrollTop = logContent.scrollHeight;
+        }
+
+        // Check model status
+        async function checkModelStatus() {
+            try {
+                const response = await fetch('/health');
+                const data = await response.json();
+                const statusDiv = document.getElementById('modelStatus');
+                if (data.model_loaded) {
+                    statusDiv.className = 'status-badge status-success';
+                    statusDiv.innerHTML = '✅ MODEL SUCCESSFULLY LOADED';
+                    addLog('✅ Model successfully loaded');
+                } else {
+                    statusDiv.className = 'status-badge status-error';
+                    statusDiv.innerHTML = '⚠️ MODEL NOT LOADED';
+                    addLog('❌ Model not loaded');
+                }
+            } catch (error) {
+                addLog(`❌ Error checking model: ${error}`);
+            }
+        }
+
+        // File upload handler
+        document.getElementById('fileInput').addEventListener('change', function(e) {
+            const file = e.target.files[0];
+            if (file) {
+                currentImageFile = file;
+
+                // Image preview
+                const reader = new FileReader();
+                reader.onload = function(event) {
+                    currentImageData = event.target.result;
+                    const imageContainer = document.getElementById('imageContainer');
+                    imageContainer.innerHTML = `<img src="${currentImageData}" alt="Uploaded image">`;
+
+                    const imageInfo = document.getElementById('imageInfo');
+                    imageInfo.innerHTML = `📐 Size: ${file.width || '?'}×${file.height || '?'} px | 💾 ${(file.size / 1024).toFixed(1)} KB | 📁 ${file.name}`;
+                    imageInfo.classList.remove('hidden');
+
+                    document.getElementById('analyzeBtn').disabled = false;
+                    addLog(`📁 Image uploaded: ${file.name}`);
+                };
+                reader.readAsDataURL(file);
+            }
+        });
+
+        // Display results with damage type dropdown for damaged signs
+        function displayResults(result) {
+            const resultsContainer = document.getElementById('resultsContainer');
+            const priorityClass = result.recommendation.priority === 'HIGH' ? 'priority-high' :
+                                 result.recommendation.priority === 'MEDIUM' ? 'priority-medium' : 'priority-low';
+
+            let probabilitiesHtml = '';
+            for (const prob of result.probabilities) {
+                probabilitiesHtml += `
+                    <div style="margin-bottom: 10px;">
+                        <div style="display: flex; justify-content: space-between; margin-bottom: 5px;">
+                            <span>${prob.name}</span>
+                            <span>${(prob.probability * 100).toFixed(1)}%</span>
+                        </div>
+                        <div class="probability-bar">
+                            <div class="probability-fill" style="width: ${prob.probability * 100}%;">
+                                ${(prob.probability * 100).toFixed(1)}%
+                            </div>
+                        </div>
+                    </div>
+                `;
+            }
+
+            // Check if the detected problem is "Broken Road Sign Issues"
+            const isBrokenRoadSign = result.class_name === 'Broken Road Sign Issues';
+
+            // Damage type dropdown (shown only for broken road signs)
+            const damageSelectorHtml = isBrokenRoadSign ? `
+                <div class="result-card damage-selector">
+                    <div class="result-title">🔧 SPECIFY DAMAGE TYPE</div>
+                    <div class="result-value" style="font-size: 14px; color: #666;">Select one of 7 damage classes:</div>
+                    <select id="damageTypeSelect">
+                        <option value="Fading">💨 Fading (loss of brightness, sun damage)</option>
+                        <option value="Dirt">🧹 Dirt (mud, dust, bird droppings)</option>
+                        <option value="Cracks">⚡ Cracks (linear fractures)</option>
+                        <option value="Chips">🔨 Chips (local material loss)</option>
+                        <option value="Occlusion">🌿 Occlusion (blocked by branches, snow)</option>
+                        <option value="Vandalism">✍️ Vandalism (graffiti, stickers, scratches)</option>
+                        <option value="Corrosion">🪦 Corrosion (rust)</option>
+                    </select>
+                    <button class="btn btn-secondary" style="margin-top: 10px; width: 100%; padding: 8px;" onclick="saveDamageType()">
+                        💾 CONFIRM DAMAGE TYPE
+                    </button>
+                    <div id="damageConfirmMessage" style="margin-top: 8px; font-size: 12px; color: #4CAF50; text-align: center;"></div>
+                </div>
+            ` : '';
+
+            resultsContainer.innerHTML = `
+                <div class="result-card">
+                    <div class="result-title">🏷️ DETECTED PROBLEM TYPE</div>
+                    <div class="result-value" style="font-size: 20px; color: #e74c3c;">${result.class_name}</div>
+                </div>
+
+                <div class="result-card">
+                    <div class="result-title">📊 PREDICTION CONFIDENCE</div>
+                    <div class="result-value">${result.confidence_percent}% ${result.confidence_percent > 80 ? '(high)' : (result.confidence_percent > 60 ? '(medium)' : '(low)')}</div>
+                </div>
+
+                <div class="result-card">
+                    <div class="result-title">⚠️ MAINTENANCE PRIORITY</div>
+                    <div class="result-value ${priorityClass}">${result.recommendation.priority}</div>
+                </div>
+
+                ${damageSelectorHtml}
+
+                <div class="result-card">
+                    <div class="result-title">📊 PROBABILITIES BY CLASS</div>
+                    ${probabilitiesHtml}
+                </div>
+
+                <div class="result-card">
+                    <div class="result-title">⏱️ ANALYSIS TIME</div>
+                    <div class="result-value">${new Date().toLocaleTimeString()}</div>
+                </div>
+            `;
+        }
+
+        // Save selected damage type
+        function saveDamageType() {
+            const selectEl = document.getElementById('damageTypeSelect');
+            if (selectEl) {
+                const selectedOption = selectEl.options[selectEl.selectedIndex];
+                const selectedDamage = selectedOption.text.split(' ')[0];
+                const confirmDiv = document.getElementById('damageConfirmMessage');
+                if (confirmDiv) {
+                    confirmDiv.innerHTML = `✅ Damage type "${selectedDamage}" saved for report.`;
+                    confirmDiv.style.color = "#4CAF50";
+                    addLog(`🔧 Damage type specified: ${selectedDamage}`);
+                }
+                // Here you can send the selected damage type to the server if needed
+            }
+        }
+
+        // Analyze image
+        async function analyzeImage() {
+            if (!currentImageFile) {
+                alert('Please upload an image first!');
+                return;
+            }
+
+            const analyzeBtn = document.getElementById('analyzeBtn');
+            analyzeBtn.disabled = true;
+            analyzeBtn.innerHTML = '<div class="loader"></div> ANALYZING...';
+
+            addLog('='.repeat(50));
+            addLog('🔍 Starting image analysis');
+            addLog(`📷 Image: ${currentImageFile.name}`);
+
+            const formData = new FormData();
+            formData.append('image', currentImageFile);
+
+            try {
+                const response = await fetch('/analyze', {
+                    method: 'POST',
+                    body: formData
+                });
+
+                const data = await response.json();
+
+                if (data.error) {
+                    addLog(`❌ Error: ${data.error}`);
+                    alert(`Error: ${data.error}`);
+                    return;
+                }
+
+                if (data.success) {
+                    addLog(`✅ Analysis completed successfully!`);
+                    addLog(`📊 Result: ${data.result.class_name} (confidence: ${data.result.confidence_percent}%)`);
+
+                    currentAnalysisResult = data.result;
+                    displayResults(data.result);
+                }
+            } catch (error) {
+                addLog(`❌ Error: ${error}`);
+                alert(`Error: ${error}`);
+            } finally {
+                analyzeBtn.disabled = false;
+                analyzeBtn.innerHTML = '🔍 RUN ANALYSIS';
+            }
+        }
+
+        // Clear all
+        function clearAll() {
+            currentImageFile = null;
+            currentImageData = null;
+            currentAnalysisResult = null;
+
+            document.getElementById('imageContainer').innerHTML = `
+                <div style="text-align: center; color: #999;">
+                    <div style="font-size: 48px; margin-bottom: 10px;">🖼️</div>
+                    <p>No image uploaded</p>
+                    <p style="font-size: 12px;">Click "Upload Image" to start</p>
+                </div>
+            `;
+            document.getElementById('imageInfo').classList.add('hidden');
+            document.getElementById('resultsContainer').innerHTML = `
+                <div style="text-align: center; color: #999; padding: 40px;">
+                    <div style="font-size: 48px; margin-bottom: 10px;">🔍</div>
+                    <p>Upload an image and click "Run Analysis"</p>
+                </div>
+            `;
+            document.getElementById('analyzeBtn').disabled = true;
+            document.getElementById('fileInput').value = '';
+            addLog('🗑 All data cleared');
+        }
+
+        // Initialization
+        checkModelStatus();
+        addLog('✅ System ready');
+    </script>
+</body>
+</html>
